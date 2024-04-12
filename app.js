@@ -1,6 +1,7 @@
 import express from 'express';
 import userRoute from './routes/userRoute.js';
 import getClient from './database.js';
+import courseRoute from './routes/courseRoute.js'
 
 const app = express()
 
@@ -35,5 +36,6 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.enable('trust proxy')
 
 app.use('/api/user',userRoute)
+app.use('/api/course',courseRoute)
 
-module.exports = app
+export default app

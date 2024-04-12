@@ -1,5 +1,7 @@
-export default function catchAsync(fn) {
-    return function(req, res, next) {
-        fn(req, res, next).catch(next);
+export default function(theFunc) {
+    return (req, res, next) => {
+      Promise.resolve(theFunc(req, res, next))
+        .catch(next);
     };
-}
+  };
+  
