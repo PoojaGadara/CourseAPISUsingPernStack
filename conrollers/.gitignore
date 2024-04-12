@@ -8,7 +8,7 @@ node_modules/
 .env
 
 # Ignore compiled binaries
-*.exe
+.exe
 *.dll
 *.so
 *.dylib
