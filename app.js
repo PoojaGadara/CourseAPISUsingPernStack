@@ -2,8 +2,14 @@ import express from 'express';
 import userRoute from './routes/userRoute.js';
 import getClient from './database.js';
 import courseRoute from './routes/courseRoute.js'
+import fileUpload from 'express-fileupload';
+import cloudinary from 'cloudinary'
 
 const app = express()
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(fileUpload())
+
 
 const connectDB = async () => {
     try{
@@ -29,9 +35,12 @@ try {
     }
   }
 
+  cloudinary.config({
+    cloud_name : process.env.CLOUD_NAME,
+    api_key : process.env.API_KEY,
+    api_secret : process.env.SECRET_KEY
+})
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.enable('trust proxy')
 

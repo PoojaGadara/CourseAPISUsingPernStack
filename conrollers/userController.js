@@ -31,18 +31,21 @@ const createUser = catchAsync(async (req, res, next) => {
   const saltRounds = 10;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-  console.log(req.file)
-  // Check if req.file exists
-  if (!req.file) {
-    return res.status(400).send("Profile image is required");
-  }
   
+  console.log(req.file);
+
   try {
+    // Check if req.file exists
+    if (!req.file) {
+      return res.status(400).send("Profile image is required");
+    }
+
     // Validate email
     if (!emailRegex.test(email)) {
       return res.status(400).send("Invalid email format");
     }
 
+    // Check if user already exists
     const user = await pool.query(`SELECT * FROM users WHERE email = $1`, [email]);
     if (user.rows.length > 0) {
       return next(new Errorhandler('User already exists', 404));
@@ -50,11 +53,7 @@ const createUser = catchAsync(async (req, res, next) => {
 
     // Validate password strength
     if (!passwordRegex.test(pass)) {
-      return res
-        .status(400)
-        .send(
-          "Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number"
-        );
+      return res.status(400).send("Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, and one number");
     }
 
     // Hash the password
@@ -78,6 +77,7 @@ const createUser = catchAsync(async (req, res, next) => {
     res.status(500).send("Error creating user");
   }
 });
+
 
 const login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
